@@ -1,0 +1,2135 @@
+<html lang="fa" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    :root{
+      --shadow: 0 18px 45px rgba(0,0,0,.22);
+      --radiusLg:16px;
+      --btnPurple:#4f4de6;
+      --btnPurple2:#5d5cff;
+      --btnGreen:#129a4a;
+      --btnGreen2:#16b15a;
+      --danger:#ff4d5f;
+      --warn:#ffb020;
+      --font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  --rowH: 104px;
+  --headH: 70px;
+  --timeCol: 190px;
+
+  --eventPad: 14px;
+  --eventRad: 16px;
+}
+
+html[data-theme="light"]{
+  --bg0:#f3f6ff;
+  --bg1:#eef3ff;
+  --topbar:#e7edff;
+  --cardA: rgba(255,255,255,.88);
+  --cardB: rgba(245,248,255,.88);
+  --stroke:#cfd9f0;
+  --stroke2:#bfcce8;
+  --text:#121a2a;
+  --muted:#4b5870;
+  --muted2:#6d7a93;
+  --title:#4f4de6;
+  --gridFill: rgba(255,255,255,.55);
+  --gridFill2: rgba(247,250,255,.55);
+  --slotFill: rgba(250,252,255,.72);
+  --slotFillHover: rgba(243,247,255,.92);
+  --headFillA: rgba(235,240,255,.97);
+  --headFillB: rgba(228,235,255,.97);
+  --pillA: rgba(245,248,255,.96);
+  --pillB: rgba(238,243,255,.96);
+  --eventBorder: rgba(33,42,66,.18);
+  --overlay: rgba(10,16,28,.42);
+  --inputBg: rgba(250,252,255,.92);
+  --inputBg2: rgba(242,246,255,.92);
+  --inputStroke: rgba(183,198,229,.95);
+  --shadow: 0 18px 45px rgba(16,24,40,.18);
+
+  --filledA: rgba(79,77,230,.24);
+  --filledB: rgba(79,77,230,.12);
+  --filledStroke: rgba(79,77,230,.32);
+}
+
+html[data-theme="dark"]{
+  --bg0:#040816;
+  --bg1:#050b18;
+  --topbar:#0c1423;
+  --cardA: rgba(16,26,42,.96);
+  --cardB: rgba(14,23,38,.96);
+  --stroke:#1b2a40;
+  --stroke2:#23324a;
+  --text:#e9eef9;
+  --muted:#aab5c8;
+  --muted2:#7e8aa3;
+  --title:#7a78ff;
+  --gridFill: rgba(14,23,38,.56);
+  --gridFill2: rgba(12,20,35,.56);
+  --slotFill: rgba(20,31,49,.58);
+  --slotFillHover: rgba(26,40,62,.62);
+  --headFillA: rgba(15,24,40,.96);
+  --headFillB: rgba(12,20,35,.94);
+  --pillA: rgba(12,20,35,.66);
+  --pillB: rgba(10,17,30,.56);
+  --eventBorder: rgba(255,255,255,.14);
+  --overlay: rgba(0,0,0,.62);
+  --inputBg: rgba(20,31,49,.58);
+  --inputBg2: rgba(14,23,38,.66);
+  --inputStroke: rgba(35,50,74,.88);
+
+  --filledA: rgba(122,120,255,.28);
+  --filledB: rgba(122,120,255,.14);
+  --filledStroke: rgba(122,120,255,.36);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: var(--font);
+  color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 50% 10%, rgba(93,92,255,.14), transparent 60%),
+    radial-gradient(900px 520px at 20% 70%, rgba(18,177,90,.10), transparent 65%),
+    linear-gradient(180deg, var(--bg1) 0%, var(--bg0) 45%, var(--bg0) 100%);
+}
+
+html[dir="rtl"] .brand,
+html[dir="rtl"] .section-title,
+html[dir="rtl"] .label,
+html[dir="rtl"] .sessions-title,
+html[dir="rtl"] .hint,
+html[dir="rtl"] .dialog-title { text-align:right; }
+
+html[dir="ltr"] .brand,
+html[dir="ltr"] .section-title,
+html[dir="ltr"] .label,
+html[dir="ltr"] .sessions-title,
+html[dir="ltr"] .hint,
+html[dir="ltr"] .dialog-title { text-align:left; }
+
+.topbar{
+  min-height:86px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--topbar) 95%, transparent) 0%, color-mix(in srgb, var(--topbar) 86%, transparent) 100%);
+  border-bottom: 1px solid color-mix(in srgb, var(--stroke) 70%, transparent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 10px 18px;
+}
+
+.topbar-inner{
+  width:min(1280px, 96vw);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+
+.brand{
+  font-size:38px;
+  font-weight:900;
+  letter-spacing:.2px;
+  color: var(--title);
+  text-shadow: 0 4px 18px rgba(93,92,255,.12);
+  line-height:1;
+  white-space:nowrap;
+}
+
+.actions{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  justify-content:flex-start;
+}
+
+.btn{
+  border:0;
+  cursor:pointer;
+  font-family:inherit;
+  font-weight:900;
+  font-size:16px;
+  padding:14px 22px;
+  border-radius:10px;
+  color:#fff;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  box-shadow: 0 10px 22px rgba(0,0,0,.20);
+  transition: transform .08s ease, filter .12s ease, box-shadow .12s ease;
+  user-select:none;
+  white-space:nowrap;
+}
+.btn:active{ transform: translateY(1px) scale(.99); }
+.btn-purple{ background: linear-gradient(180deg, var(--btnPurple2), var(--btnPurple)); }
+.btn-green{ background: linear-gradient(180deg, var(--btnGreen2), var(--btnGreen)); }
+
+.chip{
+  height:44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 92%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cardA) 85%, transparent), color-mix(in srgb, var(--cardB) 85%, transparent));
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow: 0 10px 22px rgba(0,0,0,.10);
+  color: var(--text);
+  white-space:nowrap;
+}
+
+.toggle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+  user-select:none;
+}
+.toggle .lbl{
+  font-weight:900;
+  font-size:13px;
+  color: var(--muted);
+  letter-spacing:.2px;
+}
+.switch{
+  width:50px;
+  height:26px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb, var(--stroke2) 85%, transparent);
+  background: color-mix(in srgb, var(--cardA) 75%, transparent);
+  position:relative;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.02);
+}
+.switch::after{
+  content:"";
+  position:absolute;
+  top:3px;
+  right:3px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background: linear-gradient(180deg, #ffffff, #e9eeff);
+  box-shadow: 0 8px 18px rgba(0,0,0,.18);
+  transition: transform .18s ease;
+}
+html[data-theme="dark"] .switch::after{
+  transform: translateX(-24px);
+  background: linear-gradient(180deg, #dfe6ff, #98a6ff);
+}
+
+.wrap{
+  width:min(1280px, 96vw);
+  margin: 0 auto;
+  padding: 34px 0 46px;
+}
+
+.card{
+  background: linear-gradient(180deg, var(--cardA), var(--cardB));
+  border:1px solid color-mix(in srgb, var(--stroke) 88%, transparent);
+  border-radius: var(--radiusLg);
+  box-shadow: var(--shadow);
+}
+
+.schedule{
+  padding: 0;
+  overflow:hidden;
+}
+
+.grid-wrap{
+  overflow:auto;
+  border-radius: var(--radiusLg);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: var(--timeCol) repeat(7, 1fr);
+  grid-auto-rows: var(--rowH);
+  min-width: 1040px;
+  position:relative;
+}
+
+.cell{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  border-left: 1px solid color-mix(in srgb, var(--stroke2) 75%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--stroke2) 65%, transparent);
+  color: var(--muted);
+  background: var(--gridFill);
+}
+
+.head{
+  background: linear-gradient(180deg, var(--headFillA), var(--headFillB));
+  color: color-mix(in srgb, var(--text) 92%, #ffffff 0%);
+  font-weight:900;
+  letter-spacing:.2px;
+  height: var(--headH);
+  border-bottom: 1px solid color-mix(in srgb, var(--stroke2) 85%, transparent);
+  font-size:16px;
+}
+
+.corner{
+  color: var(--muted2);
+  font-weight:900;
+}
+
+.time{
+  justify-content:flex-start;
+  padding: 0 18px;
+  color: var(--muted);
+  background: var(--gridFill2);
+  font-weight:900;
+  gap:10px;
+  white-space:nowrap;
+}
+.time .tBadge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:32px;
+  height:32px;
+  border-radius:12px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 80%, transparent);
+  background: color-mix(in srgb, var(--cardA) 55%, transparent);
+  color: color-mix(in srgb, var(--text) 92%, transparent);
+  flex:0 0 auto;
+  font-size:14px;
+}
+
+.slot{
+  background: var(--slotFill);
+  position:relative;
+}
+.slot:hover{ background: var(--slotFillHover); }
+
+.slot.filled{
+  background: linear-gradient(180deg, var(--filledA), var(--filledB));
+  box-shadow:
+    inset 0 0 0 2px var(--filledStroke),
+    inset 0 0 0 1px rgba(255,255,255,.06);
+}
+
+.events-layer{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  display:grid;
+  grid-template-columns: var(--timeCol) repeat(7, 1fr);
+  grid-auto-rows: var(--rowH);
+}
+
+.event-block{
+  pointer-events:auto;
+  margin: 8px 10px;
+  border-radius: var(--eventRad);
+  border: 2px solid color-mix(in srgb, var(--eventBorder) 100%, transparent);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.26),
+    inset 0 0 0 1px rgba(255,255,255,.10);
+  backdrop-filter: blur(2px);
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 10px 12px;
+  min-width:0;
+  cursor:pointer;
+}
+.event-block:hover{ filter: brightness(1.03); }
+
+.event-left{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  flex:1 1 auto;
+  min-width:0;
+  padding:0;
+}
+
+.event-dot{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  flex:0 0 auto;
+  margin:0;
+  box-shadow: 0 0 0 4px rgba(106,119,255,.14);
+}
+
+.event-title{
+  flex: 1 1 auto;
+  min-width:0;
+  margin:0;
+  padding: 0 6px;
+  font-size:22px;
+  font-weight:900;
+  line-height:1.15;
+  text-align:center;
+  white-space:normal;
+  overflow:hidden;
+  text-overflow:clip;
+  display:block;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: none;
+  color: color-mix(in srgb, var(--text) 98%, #ffffff 0%);
+  letter-spacing:.2px;
+  text-shadow: 0 10px 22px rgba(0,0,0,.18);
+}
+
+/* Small action menu (dynamic) */
+.event-x{
+  pointer-events:auto;
+  width:38px;
+  height:36px;
+  border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--eventBorder) 100%, transparent);
+  background: color-mix(in srgb, var(--cardA) 35%, transparent);
+  color: color-mix(in srgb, var(--text) 95%, #ffffff 0%);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  cursor:pointer;
+  padding:0;
+  outline:none;
+  transition: opacity .12s ease, transform .12s ease, filter .12s ease;
+  opacity: 0;
+  transform: translateY(-2px) scale(.98);
+  position:absolute;
+  top:10px;
+  inset-inline-end:10px;
+}
+.event-block:hover .event-x,
+.event-x:focus-visible{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.event-x:active{ transform: translateY(1px) scale(.99); }
+.event-x:hover{ filter: brightness(1.12); }
+
+.event-menu{
+  position:absolute;
+  top: 52px;
+  inset-inline-end: 10px;
+  width: 220px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 84%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cardA) 92%, transparent), color-mix(in srgb, var(--cardB) 92%, transparent));
+  box-shadow: 0 20px 55px rgba(0,0,0,.28);
+  padding: 10px;
+  display:none;
+  z-index: 50;
+}
+.event-menu.open{ display:block; }
+.event-menu .m-btn{
+  width:100%;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 78%, transparent);
+  background: color-mix(in srgb, var(--cardA) 55%, transparent);
+  color: color-mix(in srgb, var(--text) 96%, transparent);
+  border-radius: 12px;
+  padding: 10px 10px;
+  font-family: var(--font);
+  font-weight:900;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin: 8px 0 0;
+}
+.event-menu .m-btn:first-child{ margin-top:0; }
+.event-menu .m-btn.danger{
+  border-color: color-mix(in srgb, var(--danger) 35%, var(--stroke2) 65%);
+  background: color-mix(in srgb, var(--danger) 14%, var(--cardA) 86%);
+}
+
+.event-break{
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--warn) 65%, var(--eventBorder) 35%);
+  background: linear-gradient(180deg, rgba(255,176,32,.26), rgba(255,176,32,.16));
+}
+html[data-theme="dark"] .event-break{
+  background: linear-gradient(180deg, rgba(255,176,32,.24), rgba(255,176,32,.14));
+}
+
+.section{
+  margin-top: 30px;
+  padding: 22px 26px;
+}
+.section-title{
+  font-size:24px;
+  font-weight:900;
+  color: color-mix(in srgb, var(--title) 78%, var(--text) 22%);
+  margin: 0;
+  line-height:1.15;
+}
+
+.two-col{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:18px;
+  margin-top: 14px;
+}
+
+.subcard{
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 80%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cardA) 72%, transparent), color-mix(in srgb, var(--cardB) 72%, transparent));
+  padding: 14px 14px;
+}
+
+.subhead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.subttl{
+  margin:0;
+  font-size:15px;
+  font-weight:900;
+  color: color-mix(in srgb, var(--text) 92%, transparent);
+}
+
+.courses-empty{
+  margin-top: 12px;
+  color: color-mix(in srgb, var(--muted) 82%, transparent);
+  font-size:14px;
+  display:none;
+  font-weight:800;
+}
+
+.courses{
+  margin-top: 12px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.course-pill{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding: 14px 14px 14px 16px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 85%, transparent);
+  background: linear-gradient(180deg, var(--pillA), var(--pillB));
+  cursor:pointer;
+  transition: filter .12s ease, transform .08s ease;
+}
+.course-pill:hover{ filter: brightness(1.04); }
+.course-pill:active{ transform: translateY(1px); }
+
+.course-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  box-shadow: 0 0 0 3px rgba(106,119,255,.14);
+  flex:0 0 auto;
+}
+
+.course-name{
+  font-weight:900;
+  color: color-mix(in srgb, var(--text) 96%, #ffffff 0%);
+  font-size:15px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  max-width: 58ch;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.course-meta{
+  font-size:12px;
+  color: color-mix(in srgb, var(--muted) 92%, transparent);
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.course-actions{
+  display:flex;
+  gap:10px;
+  flex:0 0 auto;
+}
+
+.icon-btn{
+  width:38px;
+  height:36px;
+  border-radius:10px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 88%, transparent);
+  background: color-mix(in srgb, var(--cardA) 55%, transparent);
+  color: color-mix(in srgb, var(--text) 95%, #ffffff 0%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition: filter .12s ease, transform .08s ease;
+}
+.icon-btn:active{ transform: translateY(1px); }
+.icon-btn:hover{ filter: brightness(1.08); }
+
+.rem-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 10px 10px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 78%, transparent);
+  background: color-mix(in srgb, var(--cardA) 55%, transparent);
+  margin-top: 10px;
+}
+.rem-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+.chk{
+  width:18px;
+  height:18px;
+  accent-color: var(--btnPurple);
+  cursor:pointer;
+  flex:0 0 auto;
+}
+.rem-title{
+  font-weight:900;
+  color: color-mix(in srgb, var(--text) 96%, transparent);
+  font-size:14px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  max-width: 40ch;
+}
+.rem-title.done{
+  text-decoration: line-through;
+  opacity:.70;
+}
+
+.toast{
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  background: color-mix(in srgb, var(--cardA) 88%, rgba(10,16,28,.88) 12%);
+  border: 1px solid color-mix(in srgb, var(--stroke2) 82%, transparent);
+  color: color-mix(in srgb, var(--text) 96%, #ffffff 0%);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 14px;
+  box-shadow: 0 18px 45px rgba(0,0,0,.28);
+  display:none;
+  max-width: min(560px, 92vw);
+  z-index: 2000;
+  font-weight:900;
+}
+
+.modal{
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding: 18px;
+  z-index: 1500;
+}
+.modal.open{ display:flex; }
+
+.dialog{
+  width: min(600px, 96vw);
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 86%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cardA) 92%, transparent), color-mix(in srgb, var(--cardB) 92%, transparent));
+  box-shadow: 0 28px 70px rgba(0,0,0,.35);
+  overflow:hidden;
+}
+
+.dialog-head{
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--stroke2) 70%, transparent);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.dialog-title{
+  margin:0;
+  font-size:26px;
+  font-weight:900;
+  color: color-mix(in srgb, var(--title) 78%, var(--text) 22%);
+}
+.mode-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 82%, transparent);
+  background: color-mix(in srgb, var(--cardA) 55%, transparent);
+  color: color-mix(in srgb, var(--text) 92%, transparent);
+  font-weight:900;
+  font-size:12px;
+  white-space:nowrap;
+}
+
+.dialog-body{
+  padding: 14px 24px 18px;
+  max-height: min(72vh, 740px);
+  overflow:auto;
+}
+
+.field{ margin-top: 12px; }
+.label{
+  font-size:13px;
+  font-weight:900;
+  color: color-mix(in srgb, var(--muted) 92%, transparent);
+  margin: 0 0 8px;
+}
+.input, .textarea, .select{
+  width:100%;
+  border-radius: 10px;
+  border: 1px solid var(--inputStroke);
+  background: linear-gradient(180deg, var(--inputBg), var(--inputBg2));
+  color: var(--text);
+  padding: 12px 14px;
+  font-family: var(--font);
+  font-size: 15px;
+  outline:none;
+  font-weight:900;
+}
+.textarea{ min-height: 86px; resize: vertical; }
+
+.divider{
+  height:1px;
+  background: color-mix(in srgb, var(--stroke2) 65%, transparent);
+  margin: 18px 0;
+}
+
+.sessions-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+}
+.sessions-title{
+  margin:0;
+  font-size:18px;
+  font-weight:900;
+  color: color-mix(in srgb, var(--text) 92%, transparent);
+}
+.hint{
+  font-size:12px;
+  font-weight:900;
+  color: color-mix(in srgb, var(--muted2) 92%, transparent);
+  margin-top: 6px;
+}
+
+.session-row{
+  display:grid;
+  grid-template-columns: 1.1fr 1fr 1fr 1fr auto;
+  gap:10px;
+  align-items:end;
+  margin-top: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--stroke2) 55%, transparent);
+}
+
+.tiny{
+  font-size:12px;
+  font-weight:900;
+  color: color-mix(in srgb, var(--muted) 90%, transparent);
+  margin-top:8px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.pill-mini{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 82%, transparent);
+  background: color-mix(in srgb, var(--cardA) 55%, transparent);
+  color: color-mix(in srgb, var(--text) 92%, transparent);
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.link{
+  border:0;
+  background: transparent;
+  color: color-mix(in srgb, var(--title) 90%, var(--text) 10%);
+  font-weight:900;
+  cursor:pointer;
+  padding: 10px 0;
+  font-size: 14px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.remove{
+  border:0;
+  background: transparent;
+  color: color-mix(in srgb, var(--danger) 95%, transparent);
+  font-weight:900;
+  cursor:pointer;
+  padding: 10px 0;
+  font-size: 13px;
+  justify-self:end;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  user-select:none;
+}
+
+.dialog-foot{
+  padding: 16px 24px 22px;
+  border-top: 1px solid color-mix(in srgb, var(--stroke2) 70%, transparent);
+  display:flex;
+  justify-content:flex-start;
+  gap:12px;
+}
+
+.btn-ghost{
+  background: color-mix(in srgb, var(--cardA) 55%, transparent);
+  color: color-mix(in srgb, var(--text) 96%, transparent);
+  border: 1px solid color-mix(in srgb, var(--stroke2) 82%, transparent);
+  box-shadow: none;
+}
+
+.btn-primary{
+  background: linear-gradient(180deg, var(--btnPurple2), var(--btnPurple));
+}
+
+.settings-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  margin-top: 12px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--stroke2) 82%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--cardA) 70%, transparent), color-mix(in srgb, var(--cardB) 70%, transparent));
+}
+.mini{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.mini .label2{
+  font-size:12px;
+  font-weight:900;
+  color: color-mix(in srgb, var(--muted) 92%, transparent);
+  white-space:nowrap;
+}
+.mini input, .mini select{
+  height: 40px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--inputStroke);
+  background: linear-gradient(180deg, var(--inputBg), var(--inputBg2));
+  color: var(--text);
+  font-family: var(--font);
+  font-weight:900;
+  font-size: 13px;
+  outline:none;
+}
+
+.btn-sm{
+  height:44px;
+  padding:10px 14px;
+  border-radius:12px;
+  font-size:14px;
+  font-weight:900;
+}
+
+@media (max-width: 980px){
+  .brand{ font-size:32px; }
+  .btn{ padding:12px 18px; font-size:15px; }
+  :root{ --timeCol: 170px; --rowH: 100px; }
+}
+
+@media (max-width: 860px){
+  .two-col{ grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px){
+  .topbar-inner{ flex-direction:column; align-items:flex-start; }
+  .actions{ width:100%; }
+  .wrap{ padding-top: 22px; }
+  .dialog{ width: min(640px, 96vw); }
+  .session-row{ grid-template-columns: 1fr 1fr; }
+  .session-row .field:nth-child(3){ grid-column: 1 / span 1; }
+  .session-row .field:nth-child(4){ grid-column: 2 / span 1; }
+  .session-row .tiny{ grid-column: 1 / -1; }
+  .session-row .remove{ grid-column: 2 / span 1; justify-self:end; }
+  :root{ --timeCol: 150px; --rowH: 96px; }
+  .grid{ min-width: 980px; }
+}  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" id="brandText">پلنر</div>
+      <div class="actions">
+        <div class="chip">
+          <label class="toggle" id="themeToggle" title="Switch theme">
+            <span class="lbl" id="themeLabel">Light</span>
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+        </div>
+    <div class="chip">
+      <label class="toggle" id="langToggle" title="Switch language">
+        <span class="lbl" id="langLabel">FA</span>
+        <span class="switch" aria-hidden="true"></span>
+      </label>
+    </div>
+
+    <button class="btn btn-purple" id="openModalBtn">
+      <span style="font-size:18px; font-weight:900; line-height:0;">+</span>
+      <span id="addCourseBtnText">افزودن دوره</span>
+    </button>
+
+    <button class="btn btn-green" id="exportBtn"><span id="exportBtnText">خروجی PNG</span></button>
+  </div>
+</div>  </header>
+  <main class="wrap" id="pageCapture">
+    <section class="card schedule" id="scheduleCard">
+      <div class="grid-wrap">
+        <div class="grid" id="grid">
+          <div class="events-layer" id="eventsLayer"></div>
+        </div>
+      </div>
+    </section>
+<section class="card section" style="margin-top:28px;">
+  <h2 class="section-title" id="sectionCoursesTitle">دوره‌های من</h2>
+
+  <div class="two-col">
+    <div class="subcard">
+      <div class="subhead">
+        <h3 class="subttl" id="coursesListTitle">لیست دوره‌ها</h3>
+        <button class="btn btn-ghost btn-sm" id="clearAllBtn" title="Clear all">
+          <i class="fas fa-trash"></i>
+          <span id="clearAllText">پاک‌کردن همه</span>
+        </button>
+      </div>
+      <div class="courses-empty" id="emptyNote">هنوز چیزی اضافه نشده.</div>
+      <div class="courses" id="courses"></div>
+    </div>
+
+    <div class="subcard">
+      <div class="subhead">
+        <h3 class="subttl" id="remindersTitle">ریمایندرها</h3>
+        <button class="btn btn-ghost btn-sm" id="addReminderBtn" title="Add reminder">
+          <i class="fas fa-plus"></i>
+          <span id="addReminderText">افزودن</span>
+        </button>
+      </div>
+
+      <div class="courses-empty" id="remEmpty">ریمایندری ندارید.</div>
+
+      <div style="margin-top:12px;">
+        <div class="subttl" style="font-size:13px; opacity:.9;" id="remTodoTitle">در انتظار</div>
+        <div id="remTodo"></div>
+      </div>
+
+      <div style="margin-top:14px;">
+        <div class="subttl" style="font-size:13px; opacity:.9;" id="remDoneTitle">انجام شده</div>
+        <div id="remDone"></div>
+      </div>
+    </div>
+  </div>
+</section>  </main>
+  <div class="toast" id="toast"></div>
+  <div class="modal" id="modal">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+      <div class="dialog-head">
+        <h3 class="dialog-title" id="dlgTitle">افزودن دوره</h3>
+        <div class="mode-pill" id="modePill"><i class="fas fa-plus"></i><span id="modeText">New</span></div>
+      </div>
+  <div class="dialog-body">
+    <div class="field">
+      <div class="label" id="lblTitle">عنوان</div>
+      <input class="input" id="fTitle" placeholder="مثلاً: الگوریتم‌ها" list="titleSuggestions" />
+      <datalist id="titleSuggestions"></datalist>
+    </div>
+
+    <div class="field">
+      <div class="label" id="lblDesc">توضیح کوتاه</div>
+      <textarea class="textarea" id="fDesc" placeholder="چند خط توضیح..."></textarea>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sessions-head">
+      <div>
+        <div class="sessions-title" id="sessionsTitle">سشن‌ها (هر چندتا خواستی اضافه کن)</div>
+        <div class="hint" id="sessionsHint">روز + ساعت شروع + طول بازه → پایان خودکار محاسبه می‌شود</div>
+      </div>
+    </div>
+
+    <div class="settings-row">
+      <div class="mini">
+        <span class="label2" id="globalSlotLbl">طول پیش‌فرض بازه (دقیقه)</span>
+        <select id="setStep"></select>
+      </div>
+
+      <button class="btn btn-ghost btn-sm" id="addBreakSessionBtn" title="Add break session">
+        <i class="fas fa-mug-hot"></i>
+        <span id="addBreakText">تایم استراحت</span>
+      </button>
+    </div>
+
+    <div id="sessions"></div>
+
+    <button class="link" id="addSessionBtn">
+      <span style="font-weight:900;">+</span>
+      <span id="addSessionText">افزودن سشن</span>
+    </button>
+  </div>
+
+  <div class="dialog-foot">
+    <button class="btn btn-ghost" id="cancelBtn" style="min-width:110px;">
+      <span id="cancelText">لغو</span>
+    </button>
+    <button class="btn btn-primary" id="saveBtn" style="min-width:170px;">
+      <span id="saveText">ذخیره</span>
+    </button>
+  </div>
+</div>  </div>
+  <script>
+    const STORE_KEY = "planner_v5_state";
+    const THEME_KEY = "planner_v5_theme";
+    const LANG_KEY  = "planner_v5_lang";
+
+    const DAYS = ["Sat","Sun","Mon","Tue","Wed","Thu","Fri"];
+    const SLOT_OPTIONS = [5,10,15,20,25,30,35,40,45,50,55,60,70,75,80,90,100,105,110,120,135,150,180];
+
+    const i18n = {
+      fa: {
+        dir: "rtl",
+        brand: "پلنر",
+        addCourse: "افزودن دوره",
+        export: "خروجی PNG",
+        courses: "دوره‌های من",
+        coursesList: "لیست دوره‌ها",
+        reminders: "ریمایندرها",
+        remindersTodo: "در انتظار",
+        remindersDone: "انجام شده",
+        clearAll: "پاک‌کردن همه",
+        add: "افزودن",
+        emptyCourses: "هنوز چیزی اضافه نشده.",
+        emptyRem: "ریمایندری ندارید.",
+        modalNew: "افزودن دوره",
+        modalEdit: "ویرایش دوره",
+        title: "عنوان",
+        desc: "توضیح کوتاه",
+        sessionsTitle: "سشن‌ها (هر چندتا خواستی اضافه کن)",
+        sessionsHint: "روز + ساعت شروع + طول بازه → پایان خودکار محاسبه می‌شود",
+        addSession: "افزودن سشن",
+        addBreak: "تایم استراحت",
+        cancel: "لغو",
+        save: "ذخیره",
+        saveEdit: "ذخیره تغییرات",
+        day: "روز",
+        start: "شروع",
+        length: "طول بازه",
+        endAuto: "پایان",
+        remove: "حذف",
+        edit: "ویرایش",
+        deleteCourse: "حذف دوره",
+        removeSession: "حذف همین سشن",
+        openEdit: "باز کردن ویرایش",
+        sessionType: "نوع",
+        typeCourse: "کلاس",
+        typeBreak: "استراحت",
+        defaultLen: "طول پیش‌فرض بازه (دقیقه)",
+        toastSaved: "ذخیره شد",
+        toastUpdated: "آپدیت شد",
+        toastDeleted: "حذف شد",
+        toastRemoved: "حذف شد",
+        toastExporting: "در حال خروجی گرفتن…",
+        toastExported: "PNG ذخیره شد",
+        confirmDeleteCourse: "این دوره حذف شود؟",
+        confirmRemoveSession: "این سشن از جدول حذف شود؟",
+        promptReminder: "عنوان ریمایندر را وارد کن:",
+        toastInvalid: "اطلاعات سشن کامل نیست",
+        timeCol: "زمان",
+        cleared: "پاک شد",
+        defaultSaved: "طول پیش‌فرض ذخیره شد",
+        alreadyExists: "قبلاً اضافه شده",
+        added: "اضافه شد"
+      },
+      en: {
+        dir: "ltr",
+        brand: "Planner",
+        addCourse: "Add Course",
+        export: "Export PNG",
+        courses: "My Courses",
+        coursesList: "Courses",
+        reminders: "Reminders",
+        remindersTodo: "To do",
+        remindersDone: "Done",
+        clearAll: "Clear all",
+        add: "Add",
+        emptyCourses: "No items yet.",
+        emptyRem: "No reminders.",
+        modalNew: "Add Course",
+        modalEdit: "Edit Course",
+        title: "Title",
+        desc: "Short Description",
+        sessionsTitle: "Sessions (add as many as needed)",
+        sessionsHint: "Day + start time + length → end is auto-calculated",
+        addSession: "Add Session",
+        addBreak: "Break time",
+        cancel: "Cancel",
+        save: "Save",
+        saveEdit: "Save changes",
+        day: "Day",
+        start: "Start",
+        length: "Length",
+        endAuto: "Ends",
+        remove: "Remove",
+        edit: "Edit",
+        deleteCourse: "Delete course",
+        removeSession: "Remove only this session",
+        openEdit: "Open edit",
+        sessionType: "Type",
+        typeCourse: "Class",
+        typeBreak: "Break",
+        defaultLen: "Default length (min)",
+        toastSaved: "Saved",
+        toastUpdated: "Updated",
+        toastDeleted: "Deleted",
+        toastRemoved: "Removed",
+        toastExporting: "Exporting…",
+        toastExported: "Saved PNG",
+        confirmDeleteCourse: "Delete this course?",
+        confirmRemoveSession: "Remove this session from the grid?",
+        promptReminder: "Enter reminder title:",
+        toastInvalid: "Session info is incomplete",
+        timeCol: "Time",
+        cleared: "Cleared",
+        defaultSaved: "Default length saved",
+        alreadyExists: "Already exists",
+        added: "Added"
+      }
+    };
+
+    const gridEl = document.getElementById("grid");
+    const eventsLayerEl = document.getElementById("eventsLayer");
+    const coursesEl = document.getElementById("courses");
+    const emptyNote = document.getElementById("emptyNote");
+    const toastEl = document.getElementById("toast");
+
+    const remTodoEl = document.getElementById("remTodo");
+    const remDoneEl = document.getElementById("remDone");
+    const remEmptyEl = document.getElementById("remEmpty");
+
+    const modal = document.getElementById("modal");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const saveBtn = document.getElementById("saveBtn");
+
+    const fTitle = document.getElementById("fTitle");
+    const fDesc = document.getElementById("fDesc");
+
+    const sessionsEl = document.getElementById("sessions");
+    const addSessionBtn = document.getElementById("addSessionBtn");
+    const addBreakSessionBtn = document.getElementById("addBreakSessionBtn");
+
+    const setStep = document.getElementById("setStep");
+    const exportBtn = document.getElementById("exportBtn");
+
+    const themeToggle = document.getElementById("themeToggle");
+    const themeLabel = document.getElementById("themeLabel");
+
+    const langToggle = document.getElementById("langToggle");
+    const langLabel = document.getElementById("langLabel");
+
+    const clearAllBtn = document.getElementById("clearAllBtn");
+    const addReminderBtn = document.getElementById("addReminderBtn");
+
+    const titleSuggestions = document.getElementById("titleSuggestions");
+    const modePill = document.getElementById("modePill");
+
+    let editingCourseId = null;
+    let openMenuEl = null;
+
+    function toast(msg){
+      toastEl.textContent = msg;
+      toastEl.style.display = "block";
+      clearTimeout(toastEl._t);
+      toastEl._t = setTimeout(()=> toastEl.style.display="none", 2200);
+    }
+
+    function uid(){
+      if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+      return String(Date.now()) + Math.random().toString(16).slice(2);
+    }
+
+    function getLang(){ return localStorage.getItem(LANG_KEY) || "fa"; }
+    function t(){ return i18n[getLang()] || i18n.fa; }
+
+    function setLang(lang){
+      localStorage.setItem(LANG_KEY, lang);
+      const cfg = i18n[lang] || i18n.fa;
+      document.documentElement.setAttribute("lang", lang);
+      document.documentElement.setAttribute("dir", cfg.dir);
+      applyTexts();
+      renderAll();
+    }
+
+    function loadTheme(){
+      const th = localStorage.getItem(THEME_KEY) || "light";
+      document.documentElement.setAttribute("data-theme", th);
+      themeLabel.textContent = th === "dark" ? "Dark" : "Light";
+    }
+
+    function toggleTheme(){
+      const cur = document.documentElement.getAttribute("data-theme") || "light";
+      const next = cur === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem(THEME_KEY, next);
+      themeLabel.textContent = next === "dark" ? "Dark" : "Light";
+    }
+
+    function toggleLang(){
+      const cur = getLang();
+      const next = cur === "fa" ? "en" : "fa";
+      setLang(next);
+      langLabel.textContent = next.toUpperCase();
+    }
+
+    function parseTimeToMin(tstr){
+      if(!tstr || typeof tstr !== "string" || !tstr.includes(":")) return null;
+      const [h,m] = tstr.split(":").map(x=>parseInt(x,10));
+      if(Number.isNaN(h) || Number.isNaN(m)) return null;
+      return h*60 + m;
+    }
+
+    function minToTime(min){
+      const h = Math.floor(min/60);
+      const m = min%60;
+      return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+    }
+
+    function prettyRange(startMin, endMin){
+      return `${minToTime(startMin)}–${minToTime(endMin % (24*60))}`;
+    }
+
+    function hexToRgba(hex, a){
+      let h = (hex || "").replace("#","").trim();
+      if(h.length === 3) h = h.split("").map(ch => ch+ch).join("");
+      if(h.length !== 6) return `rgba(106,119,255,${a})`;
+      const r = parseInt(h.slice(0,2), 16);
+      const g = parseInt(h.slice(2,4), 16);
+      const b = parseInt(h.slice(4,6), 16);
+      return `rgba(${r},${g},${b},${a})`;
+    }
+
+    function randomColor(){
+      const palette = ["#6a77ff","#7a78ff","#4f4de6","#16b15a","#2aa9ff","#ff7a59","#ff4d5f","#9a6bff"];
+      return palette[Math.floor(Math.random()*palette.length)];
+    }
+
+    /* ✅ NEW: each activity/session gets its own color */
+    function randomSessionColor(){
+      const palette = ["#6a77ff","#7a78ff","#4f4de6","#16b15a","#2aa9ff","#ff7a59","#ff4d5f","#9a6bff","#00b3a4","#ffc44d"];
+      return palette[Math.floor(Math.random()*palette.length)];
+    }
+
+    function getState(){
+      try{
+        const raw = localStorage.getItem(STORE_KEY);
+        if(!raw) return null;
+        return JSON.parse(raw);
+      }catch(e){ return null; }
+    }
+
+    function setState(s){
+      localStorage.setItem(STORE_KEY, JSON.stringify(s));
+    }
+
+    function defaultState(){
+      return {
+        settings: { defaultLen: 90 },
+        courses: [],
+        reminders: []
+      };
+    }
+
+    function ensureState(){
+      let s = getState();
+      if(!s){
+        s = defaultState();
+        setState(s);
+      }
+      if(!s.settings) s.settings = { defaultLen: 90 };
+      if(typeof s.settings.defaultLen !== "number") s.settings.defaultLen = 90;
+      if(!Array.isArray(s.courses)) s.courses = [];
+      if(!Array.isArray(s.reminders)) s.reminders = [];
+      return s;
+    }
+
+    function addReminderFromTitle(title){
+      const s = ensureState();
+      const text = (title || "").trim();
+      if(!text) return;
+      const exists = s.reminders.some(r => (r.text || "").trim().toLowerCase() === text.toLowerCase());
+      if(exists) return;
+      s.reminders.unshift({ id: uid(), text, done:false });
+      setState(s);
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function buildTitleSuggestions(){
+      const s = ensureState();
+      const titles = [];
+      (s.courses || []).forEach(c => { if(c.title && !titles.includes(c.title)) titles.push(c.title); });
+      (s.reminders || []).forEach(r => { if(r.text && !titles.includes(r.text)) titles.push(r.text); });
+      titleSuggestions.innerHTML = titles.slice(0, 60).map(x => `<option value="${escapeHtml(x)}"></option>`).join("");
+    }
+
+    function applyTexts(){
+      const L = t();
+      document.getElementById("brandText").textContent = L.brand;
+      document.getElementById("addCourseBtnText").textContent = L.addCourse;
+      document.getElementById("exportBtnText").textContent = L.export;
+      document.getElementById("sectionCoursesTitle").textContent = L.courses;
+      document.getElementById("coursesListTitle").textContent = L.coursesList;
+      document.getElementById("remindersTitle").textContent = L.reminders;
+      document.getElementById("remTodoTitle").textContent = L.remindersTodo;
+      document.getElementById("remDoneTitle").textContent = L.remindersDone;
+      document.getElementById("clearAllText").textContent = L.clearAll;
+      document.getElementById("addReminderText").textContent = L.add;
+
+      document.getElementById("lblTitle").textContent = L.title;
+      document.getElementById("lblDesc").textContent = L.desc;
+      document.getElementById("sessionsTitle").textContent = L.sessionsTitle;
+      document.getElementById("sessionsHint").textContent = L.sessionsHint;
+      document.getElementById("addSessionText").textContent = L.addSession;
+      document.getElementById("addBreakText").textContent = L.addBreak;
+      document.getElementById("cancelText").textContent = L.cancel;
+      document.getElementById("saveText").textContent = editingCourseId ? L.saveEdit : L.save;
+      document.getElementById("globalSlotLbl").textContent = L.defaultLen;
+
+      emptyNote.textContent = L.emptyCourses;
+      remEmptyEl.textContent = L.emptyRem;
+
+      langLabel.textContent = getLang().toUpperCase();
+      const th = document.documentElement.getAttribute("data-theme") || "light";
+      themeLabel.textContent = th === "dark" ? "Dark" : "Light";
+
+      updateModalModePill();
+    }
+
+    function updateModalModePill(){
+      const L = t();
+      if(editingCourseId){
+        document.getElementById("dlgTitle").textContent = L.modalEdit;
+        document.getElementById("saveText").textContent = L.saveEdit;
+        modePill.innerHTML = `<i class="fas fa-pen"></i><span>Edit</span>`;
+      }else{
+        document.getElementById("dlgTitle").textContent = L.modalNew;
+        document.getElementById("saveText").textContent = L.save;
+        modePill.innerHTML = `<i class="fas fa-plus"></i><span>New</span>`;
+      }
+    }
+
+    function fillSlotOptions(){
+      const s = ensureState();
+      setStep.innerHTML = SLOT_OPTIONS.map(v => `<option value="${v}">${v}</option>`).join("");
+      setStep.value = String(s.settings.defaultLen || 90);
+    }
+
+    function openModal(){
+      modal.classList.add("open");
+      document.body.style.overflow = "hidden";
+      buildTitleSuggestions();
+      updateModalModePill();
+      setTimeout(()=>{ fTitle.focus(); }, 60);
+    }
+
+    function closeModal(){
+      modal.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    function resetModal(){
+      editingCourseId = null;
+      fTitle.value = "";
+      fDesc.value = "";
+      sessionsEl.innerHTML = "";
+      addSessionRow("course");
+      updateModalModePill();
+    }
+
+    function sessionRowTemplate(type, preset){
+      const row = document.createElement("div");
+      row.className = "session-row";
+
+      const existingId = preset?.id || uid();
+      row.dataset.sessionId = existingId;
+      row.dataset.sessionColor = preset?.color || "";
+
+      const L = t();
+
+      const fType = document.createElement("div");
+      fType.className = "field";
+      fType.innerHTML = `<div class="label">${L.sessionType}</div>`;
+      const typeSel = document.createElement("select");
+      typeSel.className = "select";
+      typeSel.innerHTML = `
+        <option value="course">${L.typeCourse}</option>
+        <option value="break">${L.typeBreak}</option>
+      `;
+      typeSel.value = (preset?.type || type) === "break" ? "break" : "course";
+      fType.appendChild(typeSel);
+
+      const fDay = document.createElement("div");
+      fDay.className = "field";
+      fDay.innerHTML = `<div class="label">${L.day}</div>`;
+      const daySel = document.createElement("select");
+      daySel.className = "select";
+      daySel.innerHTML = `<option value="">${L.day}</option>` + DAYS.map(d => `<option value="${d}">${d}</option>`).join("");
+      daySel.value = preset?.day || "";
+      fDay.appendChild(daySel);
+
+      const fStart = document.createElement("div");
+      fStart.className = "field";
+      fStart.innerHTML = `<div class="label">${L.start}</div>`;
+      const startInp = document.createElement("input");
+      startInp.className = "input";
+      startInp.type = "time";
+      startInp.step = 60;
+      if(typeof preset?.startMin === "number"){
+        startInp.value = minToTime(preset.startMin);
+      }
+      fStart.appendChild(startInp);
+
+      const fLen = document.createElement("div");
+      fLen.className = "field";
+      fLen.innerHTML = `<div class="label">${L.length}</div>`;
+      const lenSel = document.createElement("select");
+      lenSel.className = "select";
+      lenSel.innerHTML = SLOT_OPTIONS.map(v => `<option value="${v}">${v}</option>`).join("");
+      const s = ensureState();
+      lenSel.value = String(preset?.lenMin || s.settings.defaultLen || 90);
+      fLen.appendChild(lenSel);
+
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "remove";
+      removeBtn.type = "button";
+      removeBtn.innerHTML = `<i class="fas fa-times"></i><span>${L.remove}</span>`;
+      removeBtn.onclick = () => {
+        row.remove();
+        if(sessionsEl.children.length === 0) addSessionRow("course");
+      };
+
+      const tiny = document.createElement("div");
+      tiny.className = "tiny";
+      tiny.innerHTML = `
+        <span class="pill-mini"><i class="fas fa-clock"></i><span>${L.endAuto}: <b class="endTxt">--:--</b></span></span>
+        <span class="pill-mini"><i class="fas fa-info-circle"></i><span class="typeHint">${typeSel.value === "break" ? L.typeBreak : L.typeCourse}</span></span>
+      `;
+
+      function updateEnd(){
+        const sm = parseTimeToMin(startInp.value);
+        const len = parseInt(lenSel.value, 10) || 0;
+        const endEl = tiny.querySelector(".endTxt");
+        if(sm == null || !len){
+          endEl.textContent = "--:--";
+          return;
+        }
+        const end = (sm + len) % (24*60);
+        endEl.textContent = minToTime(end);
+      }
+
+      typeSel.addEventListener("change", () => {
+        tiny.querySelector(".typeHint").textContent = typeSel.value === "break" ? L.typeBreak : L.typeCourse;
+      });
+      startInp.addEventListener("input", updateEnd);
+      lenSel.addEventListener("change", updateEnd);
+
+      row.appendChild(fType);
+      row.appendChild(fDay);
+      row.appendChild(fStart);
+      row.appendChild(fLen);
+      row.appendChild(removeBtn);
+      row.appendChild(tiny);
+
+      updateEnd();
+      return row;
+    }
+
+    function addSessionRow(type, preset){
+      sessionsEl.appendChild(sessionRowTemplate(type, preset));
+    }
+
+    function collectSessionsFromModal(){
+      const rows = Array.from(document.querySelectorAll("#sessions .session-row"));
+      const sessions = [];
+
+      for(const r of rows){
+        const selects = r.querySelectorAll("select.select");
+        const typeSel = selects[0];
+        const daySel  = selects[1];
+        const startInp = r.querySelector('input[type="time"]');
+        const lenSel  = selects[2];
+
+        const type = typeSel?.value || "course";
+        const day = daySel?.value || "";
+        const start = startInp?.value || "";
+        const len = parseInt(lenSel?.value || "", 10);
+
+        if(!day || !start || !len || len <= 0) continue;
+        const sm = parseTimeToMin(start);
+        if(sm == null) continue;
+
+        sessions.push({
+          id: r.dataset.sessionId || uid(),
+          type,
+          day,
+          startMin: sm,
+          lenMin: len,
+          color: (r.dataset.sessionColor || "").trim() || undefined
+        });
+      }
+
+      if(sessions.length === 0){
+        toast(t().toastInvalid);
+        return null;
+      }
+      return sessions;
+    }
+
+    function openEditCourse(courseId){
+      const L = t();
+      const st = ensureState();
+      const course = (st.courses || []).find(c => c.id === courseId);
+      if(!course) return;
+
+      editingCourseId = courseId;
+
+      fillSlotOptions();
+      fTitle.value = course.title || "";
+      fDesc.value = course.desc || "";
+
+      sessionsEl.innerHTML = "";
+      (course.sessions || []).forEach(s => addSessionRow(s.type || "course", s));
+      if((course.sessions || []).length === 0) addSessionRow("course");
+
+      updateModalModePill();
+      openModal();
+      toast(L.openEdit);
+    }
+
+    function saveCourse(){
+      const L = t();
+      const st = ensureState();
+
+      const title = (fTitle.value || "").trim();
+      const desc  = (fDesc.value || "").trim();
+
+      if(!title){
+        toast(L.toastInvalid);
+        return;
+      }
+
+      const sessions = collectSessionsFromModal();
+      if(!sessions) return;
+
+      /* ✅ NEW: assign different colors per activity/session */
+      sessions.forEach(s => {
+        if(!s.color) s.color = (s.type === "break") ? "#ffb020" : randomSessionColor();
+      });
+
+      const newLen = parseInt(setStep.value, 10);
+      if(newLen && !Number.isNaN(newLen)) st.settings.defaultLen = newLen;
+
+      if(editingCourseId){
+        const c = (st.courses || []).find(x => x.id === editingCourseId);
+        if(c){
+          c.title = title;
+          c.desc = desc;
+          c.sessions = sessions;
+          if(!c.color) c.color = randomColor();
+          addReminderFromTitle(title);
+          setState(st);
+          closeModal();
+          toast(L.toastUpdated);
+          editingCourseId = null;
+          renderAll();
+          return;
+        }else{
+          editingCourseId = null;
+        }
+      }
+
+      const course = { id: uid(), title, desc, color: randomColor(), sessions };
+      st.courses.unshift(course);
+      addReminderFromTitle(title);
+
+      setState(st);
+      closeModal();
+      toast(L.toastSaved);
+      renderAll();
+    }
+
+    function deleteCourse(courseId){
+      const L = t();
+      if(!confirm(L.confirmDeleteCourse)) return;
+      const st = ensureState();
+      st.courses = (st.courses || []).filter(c => c.id !== courseId);
+      setState(st);
+      toast(L.toastDeleted);
+      renderAll();
+    }
+
+    function removeSingleSession(courseId, sessionId){
+      const L = t();
+      if(!confirm(L.confirmRemoveSession)) return;
+      const st = ensureState();
+      const c = (st.courses || []).find(x => x.id === courseId);
+      if(!c) return;
+      c.sessions = (c.sessions || []).filter(s => s.id !== sessionId);
+      if((c.sessions || []).length === 0){
+        st.courses = (st.courses || []).filter(x => x.id !== courseId);
+      }
+      setState(st);
+      toast(L.toastRemoved);
+      renderAll();
+    }
+
+    function closeOpenMenu(){
+      if(openMenuEl){
+        openMenuEl.classList.remove("open");
+        openMenuEl = null;
+      }
+    }
+
+    function renderCoursesList(courses){
+      const L = t();
+      coursesEl.innerHTML = "";
+
+      if(!courses || courses.length === 0){
+        emptyNote.style.display = "block";
+        return;
+      }
+      emptyNote.style.display = "none";
+
+      courses.forEach(c => {
+        const row = document.createElement("div");
+        row.className = "course-pill";
+        row.addEventListener("click", (e) => {
+          if(e.target && (e.target.closest && e.target.closest("button"))) return;
+          openEditCourse(c.id);
+        });
+
+        const left = document.createElement("div");
+        left.className = "course-left";
+
+        const dot = document.createElement("div");
+        dot.className = "dot";
+        dot.style.background = c.color || "#6a77ff";
+
+        const name = document.createElement("div");
+        name.className = "course-name";
+        name.title = c.title || "";
+
+        const main = document.createElement("span");
+        main.textContent = c.title || (L.typeCourse);
+        name.appendChild(main);
+
+        const meta1 = document.createElement("span");
+        meta1.className = "course-meta";
+        meta1.textContent = `${(c.sessions||[]).length} ${getLang()==="fa" ? "سشن" : "sessions"}`;
+        name.appendChild(meta1);
+
+        left.appendChild(dot);
+        left.appendChild(name);
+
+        const actions = document.createElement("div");
+        actions.className = "course-actions";
+
+        const edit = document.createElement("button");
+        edit.className = "icon-btn";
+        edit.title = L.edit;
+        edit.innerHTML = '<i class="fas fa-pen"></i>';
+        edit.onclick = (e) => { e.stopPropagation(); openEditCourse(c.id); };
+
+        const del = document.createElement("button");
+        del.className = "icon-btn";
+        del.title = L.deleteCourse;
+        del.innerHTML = '<i class="fas fa-trash"></i>';
+        del.onclick = (e) => { e.stopPropagation(); deleteCourse(c.id); };
+
+        actions.appendChild(edit);
+        actions.appendChild(del);
+
+        row.appendChild(left);
+        row.appendChild(actions);
+        coursesEl.appendChild(row);
+      });
+    }
+
+    function renderReminders(){
+      const st = ensureState();
+      const rem = st.reminders || [];
+
+      remTodoEl.innerHTML = "";
+      remDoneEl.innerHTML = "";
+      remEmptyEl.style.display = rem.length === 0 ? "block" : "none";
+
+      const todo = rem.filter(r => !r.done);
+      const done = rem.filter(r => r.done);
+
+      function remItem(r){
+        const row = document.createElement("div");
+        row.className = "rem-row";
+
+        const left = document.createElement("div");
+        left.className = "rem-left";
+
+        const chk = document.createElement("input");
+        chk.type = "checkbox";
+        chk.className = "chk";
+        chk.checked = !!r.done;
+
+        const title = document.createElement("div");
+        title.className = "rem-title" + (r.done ? " done" : "");
+        title.textContent = r.text || "";
+
+        chk.addEventListener("change", () => {
+          const s = ensureState();
+          const rr = (s.reminders || []).find(x => x.id === r.id);
+          if(!rr) return;
+          rr.done = chk.checked;
+          setState(s);
+          renderReminders();
+        });
+
+        left.appendChild(chk);
+        left.appendChild(title);
+
+        const del = document.createElement("button");
+        del.className = "icon-btn";
+        del.title = "Delete";
+        del.innerHTML = '<i class="fas fa-trash"></i>';
+        del.onclick = () => {
+          const s = ensureState();
+          s.reminders = (s.reminders || []).filter(x => x.id !== r.id);
+          setState(s);
+          renderReminders();
+          buildTitleSuggestions();
+        };
+
+        row.appendChild(left);
+        row.appendChild(del);
+        return row;
+      }
+
+      todo.forEach(r => remTodoEl.appendChild(remItem(r)));
+      done.forEach(r => remDoneEl.appendChild(remItem(r)));
+    }
+
+    function computeTimeRowsFromAllSessions(courses){
+      const map = new Map();
+      (courses || []).forEach(c => {
+        (c.sessions || []).forEach(s => {
+          const startMin = s.startMin;
+          const endMin = s.startMin + s.lenMin;
+          const key = `${startMin}|${endMin}`;
+          if(!map.has(key)){
+            map.set(key, { startMin, endMin, label: prettyRange(startMin, endMin) });
+          }
+        });
+      });
+      return Array.from(map.values()).sort((a,b)=> a.startMin - b.startMin);
+    }
+
+    function clearGrid(){
+      gridEl.innerHTML = "";
+      gridEl.appendChild(eventsLayerEl);
+    }
+
+    function addCell(text, cls, row, col){
+      const d = document.createElement("div");
+      d.className = cls;
+      d.textContent = text;
+      d.style.gridRow = row;
+      d.style.gridColumn = col;
+      if(cls.includes("head")) d.style.height = "var(--headH)";
+      gridEl.appendChild(d);
+    }
+
+    function buildGridFromSessions(courses){
+      const L = t();
+      const rows = computeTimeRowsFromAllSessions(courses);
+
+      clearGrid();
+
+      addCell(L.timeCol, "cell head corner", 1, 1);
+      for(let i=0;i<DAYS.length;i++){
+        addCell(DAYS[i], "cell head", 1, i+2);
+      }
+
+      if(rows.length === 0){
+        for(let r=0;r<4;r++){
+          const rowIndex = r + 2;
+          const timeCell = document.createElement("div");
+          timeCell.className = "cell time";
+          timeCell.style.gridRow = rowIndex;
+          timeCell.style.gridColumn = 1;
+          timeCell.innerHTML = `<span class="tBadge"><i class="fas fa-clock"></i></span><span style="opacity:.7; font-weight:900;">--:--</span>`;
+          gridEl.appendChild(timeCell);
+
+          for(let c=0;c<DAYS.length;c++){
+            const slot = document.createElement("div");
+            slot.className = "cell slot";
+            slot.style.gridRow = rowIndex;
+            slot.style.gridColumn = c+2;
+            gridEl.appendChild(slot);
+          }
+        }
+        eventsLayerEl.style.gridTemplateColumns = `var(--timeCol) repeat(7, 1fr)`;
+        eventsLayerEl.style.gridAutoRows = "var(--rowH)";
+        return;
+      }
+
+      rows.forEach((tr, idx) => {
+        const rowIndex = idx + 2;
+
+        const timeCell = document.createElement("div");
+        timeCell.className = "cell time";
+        timeCell.style.gridRow = rowIndex;
+        timeCell.style.gridColumn = 1;
+        timeCell.innerHTML = `<span class="tBadge"><i class="fas fa-clock"></i></span><span>${tr.label}</span>`;
+        gridEl.appendChild(timeCell);
+
+        for(let c=0;c<DAYS.length;c++){
+          const slot = document.createElement("div");
+          slot.className = "cell slot";
+          slot.dataset.day = DAYS[c];
+          slot.dataset.startMin = String(tr.startMin);
+          slot.dataset.endMin = String(tr.endMin);
+          slot.style.gridRow = rowIndex;
+          slot.style.gridColumn = c+2;
+          gridEl.appendChild(slot);
+        }
+      });
+
+      eventsLayerEl.style.gridTemplateColumns = `var(--timeCol) repeat(7, 1fr)`;
+      eventsLayerEl.style.gridAutoRows = "var(--rowH)";
+    }
+
+    function clearEvents(){
+      eventsLayerEl.innerHTML = "";
+      document.querySelectorAll(".slot.filled").forEach(el => el.classList.remove("filled"));
+      closeOpenMenu();
+    }
+
+    function makeEventMenu(L, courseId, sessionId, isBreak){
+      const menu = document.createElement("div");
+      menu.className = "event-menu";
+      if(isBreak){
+        const b1 = document.createElement("button");
+        b1.className = "m-btn danger";
+        b1.type = "button";
+        b1.innerHTML = `<span>${L.removeSession}</span><i class="fas fa-times"></i>`;
+        b1.addEventListener("click", (e)=>{ e.stopPropagation(); removeSingleSession(courseId, sessionId); });
+        menu.appendChild(b1);
+        return menu;
+      }
+
+      const editBtn = document.createElement("button");
+      editBtn.className = "m-btn";
+      editBtn.type = "button";
+      editBtn.innerHTML = `<span>${L.openEdit}</span><i class="fas fa-pen"></i>`;
+      editBtn.addEventListener("click", (e)=>{ e.stopPropagation(); closeOpenMenu(); openEditCourse(courseId); });
+
+      const remSessBtn = document.createElement("button");
+      remSessBtn.className = "m-btn danger";
+      remSessBtn.type = "button";
+      remSessBtn.innerHTML = `<span>${L.removeSession}</span><i class="fas fa-times"></i>`;
+      remSessBtn.addEventListener("click", (e)=>{ e.stopPropagation(); removeSingleSession(courseId, sessionId); });
+
+      const delCourseBtn = document.createElement("button");
+      delCourseBtn.className = "m-btn danger";
+      delCourseBtn.type = "button";
+      delCourseBtn.innerHTML = `<span>${L.deleteCourse}</span><i class="fas fa-trash"></i>`;
+      delCourseBtn.addEventListener("click", (e)=>{ e.stopPropagation(); deleteCourse(courseId); });
+
+      menu.appendChild(editBtn);
+      menu.appendChild(remSessBtn);
+      menu.appendChild(delCourseBtn);
+      return menu;
+    }
+
+    function renderEvents(courses){
+      const L = t();
+      clearEvents();
+
+      const rows = computeTimeRowsFromAllSessions(courses);
+      if(rows.length === 0) return;
+
+      const rowIndexByKey = new Map();
+      rows.forEach((r, i) => rowIndexByKey.set(`${r.startMin}|${r.endMin}`, i));
+
+      (courses || []).forEach(course => {
+        (course.sessions || []).forEach(sess => {
+          const dayIndex = DAYS.indexOf(sess.day);
+          if(dayIndex === -1) return;
+
+          const startMin = sess.startMin;
+          const endMin = sess.startMin + sess.lenMin;
+          const key = `${startMin}|${endMin}`;
+          const idx = rowIndexByKey.get(key);
+          if(idx == null) return;
+
+          const gridRow = 2 + idx;
+          const gridCol = 2 + dayIndex;
+
+          const slotEl = document.querySelector(`.slot[data-day="${sess.day}"][data-start-min="${startMin}"][data-end-min="${endMin}"]`);
+          if(slotEl) slotEl.classList.add("filled");
+
+          const ev = document.createElement("div");
+          ev.className = "event-block" + (sess.type === "break" ? " event-break" : "");
+          ev.style.gridRow = `${gridRow} / ${gridRow + 1}`;
+          ev.style.gridColumn = `${gridCol} / ${gridCol + 1}`;
+
+          const isBreak = sess.type === "break";
+
+          /* ✅ NEW: ensure older sessions also have their own color (and persist it) */
+          if(!sess.color){
+            sess.color = isBreak ? "#ffb020" : randomSessionColor();
+            const st = ensureState();
+            const c2 = (st.courses || []).find(x => x.id === course.id);
+            if(c2){
+              const s2 = (c2.sessions || []).find(x => x.id === sess.id);
+              if(s2) s2.color = sess.color;
+              setState(st);
+            }
+          }
+
+          /* ✅ NEW: base color comes from session, not course */
+          const base = isBreak ? "#ffb020" : (sess.color || "#6a77ff");
+          const bgA = isBreak ? `rgba(255,176,32,.30)` : hexToRgba(base, .60);
+          const bgB = isBreak ? `rgba(255,176,32,.18)` : hexToRgba(base, .36);
+          ev.style.background = `linear-gradient(180deg, ${bgA}, ${bgB})`;
+
+          ev.addEventListener("click", (e) => {
+            if(e.target && (e.target.closest && e.target.closest(".event-x"))) return;
+            if(e.target && (e.target.closest && e.target.closest(".event-menu"))) return;
+            closeOpenMenu();
+            if(!isBreak) openEditCourse(course.id);
+          });
+
+          const left = document.createElement("div");
+          left.className = "event-left";
+
+          const dot = document.createElement("div");
+          dot.className = "event-dot";
+          dot.style.background = base;
+
+          const title = document.createElement("div");
+          title.className = "event-title";
+          const titleText = isBreak ? (L.typeBreak) : (course.title || L.typeCourse);
+          title.textContent = titleText;
+          title.title = titleText;
+
+          left.appendChild(dot);
+          left.appendChild(title);
+
+          const xBtn = document.createElement("button");
+          xBtn.className = "event-x";
+          xBtn.type = "button";
+          xBtn.innerHTML = '<i class="fas fa-ellipsis-v"></i>';
+          xBtn.title = L.remove;
+
+          const menu = makeEventMenu(L, course.id, sess.id, isBreak);
+          ev.appendChild(menu);
+
+          xBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if(openMenuEl && openMenuEl !== menu) closeOpenMenu();
+            menu.classList.toggle("open");
+            openMenuEl = menu.classList.contains("open") ? menu : null;
+          });
+
+          ev.appendChild(left);
+          ev.appendChild(xBtn);
+          eventsLayerEl.appendChild(ev);
+        });
+      });
+    }
+
+    function renderAll(){
+      const st = ensureState();
+      setStep.value = String(st.settings.defaultLen || 90);
+      buildGridFromSessions(st.courses || []);
+      renderEvents(st.courses || []);
+      renderCoursesList(st.courses || []);
+      renderReminders();
+      buildTitleSuggestions();
+    }
+
+    exportBtn.addEventListener("click", async () => {
+      const L = t();
+      const node = document.getElementById("pageCapture");
+      toast(L.toastExporting);
+      const canvas = await html2canvas(node, { backgroundColor: null, scale: 2, useCORS:true, allowTaint:true });
+      const a = document.createElement("a");
+      a.download = "planner.png";
+      a.href = canvas.toDataURL("image/png");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      toast(L.toastExported);
+    });
+
+    openModalBtn.addEventListener("click", () => {
+      fillSlotOptions();
+      resetModal();
+      openModal();
+    });
+
+    cancelBtn.addEventListener("click", () => {
+      closeModal();
+      editingCourseId = null;
+      applyTexts();
+    });
+
+    modal.addEventListener("click", (e) => {
+      if(e.target === modal){
+        closeModal();
+        editingCourseId = null;
+        applyTexts();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        if(modal.classList.contains("open")){
+          closeModal();
+          editingCourseId = null;
+          applyTexts();
+        }
+        closeOpenMenu();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if(openMenuEl){
+        const within = openMenuEl.contains(e.target);
+        const withinBtn = e.target && e.target.closest && e.target.closest(".event-x");
+        if(!within && !withinBtn) closeOpenMenu();
+      }
+    });
+
+    saveBtn.addEventListener("click", saveCourse);
+
+    addSessionBtn.addEventListener("click", () => addSessionRow("course"));
+    addBreakSessionBtn.addEventListener("click", () => addSessionRow("break"));
+
+    setStep.addEventListener("change", () => {
+      const L = t();
+      const st = ensureState();
+      const v = parseInt(setStep.value, 10);
+      if(v && !Number.isNaN(v)){
+        st.settings.defaultLen = v;
+        setState(st);
+      }
+      toast(L.defaultSaved);
+    });
+
+    themeToggle.addEventListener("click", toggleTheme);
+    langToggle.addEventListener("click", toggleLang);
+
+    clearAllBtn.addEventListener("click", () => {
+      const L = t();
+      if(!confirm(getLang()==="fa" ? "همه دوره‌ها پاک شود؟" : "Clear all courses?")) return;
+      const st = ensureState();
+      st.courses = [];
+      setState(st);
+      toast(L.cleared);
+      renderAll();
+    });
+
+    addReminderBtn.addEventListener("click", () => {
+      const L = t();
+      const txt = prompt(L.promptReminder);
+      if(!txt) return;
+      const st = ensureState();
+      const text = txt.trim();
+      if(!text) return;
+      const exists = st.reminders.some(r => (r.text||"").trim().toLowerCase() === text.toLowerCase());
+      if(exists){
+        toast(L.alreadyExists);
+        return;
+      }
+      st.reminders.unshift({ id: uid(), text, done:false });
+      setState(st);
+      renderReminders();
+      buildTitleSuggestions();
+      toast(L.added);
+    });
+
+    (function init(){
+      if(!localStorage.getItem(THEME_KEY)) localStorage.setItem(THEME_KEY, "light");
+      if(!localStorage.getItem(LANG_KEY)) localStorage.setItem(LANG_KEY, "fa");
+
+      loadTheme();
+      langLabel.textContent = getLang().toUpperCase();
+      const cfg = i18n[getLang()] || i18n.fa;
+      document.documentElement.setAttribute("lang", getLang());
+      document.documentElement.setAttribute("dir", cfg.dir);
+
+      ensureState();
+
+      setStep.innerHTML = SLOT_OPTIONS.map(v => `<option value="${v}">${v}</option>`).join("");
+      setStep.value = String(ensureState().settings.defaultLen || 90);
+
+      applyTexts();
+      renderAll();
+    })();
+  </script>
+</body>
+</html>
